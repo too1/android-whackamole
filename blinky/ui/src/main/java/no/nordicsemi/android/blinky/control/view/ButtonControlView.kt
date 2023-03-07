@@ -22,7 +22,7 @@ import no.nordicsemi.android.common.theme.NordicTheme
 
 @Composable
 internal fun ButtonControlView(
-    state: Boolean,
+    state: String,
     modifier: Modifier = Modifier,
 ) {
     OutlinedCard(
@@ -59,7 +59,7 @@ internal fun ButtonControlView(
                     modifier = Modifier.weight(1f)
                 )
                 Text(
-                    text = if (state) stringResource(R.string.blinky_on) else stringResource(R.string.blinky_off),
+                    text = state,
                 )
             }
         }
@@ -71,7 +71,7 @@ internal fun ButtonControlView(
 private fun ButtonControlViewPreview() {
     NordicTheme {
         ButtonControlView(
-            state = true,
+            state = "NULL",
             modifier = Modifier.padding(16.dp),
         )
     }

@@ -38,7 +38,7 @@ private class BlinkyManagerImpl(
     private val _ledState = MutableStateFlow("ball")
     override val ledState = _ledState.asStateFlow()
 
-    private val _buttonState = MutableStateFlow(false)
+    private val _buttonState = MutableStateFlow("null")
     override val buttonState = _buttonState.asStateFlow()
 
     override val state = stateAsFlow()
@@ -98,7 +98,7 @@ private class BlinkyManagerImpl(
 
     private val buttonCallback by lazy {
         object : ButtonCallback() {
-            override fun onButtonStateChanged(device: BluetoothDevice, state: Boolean) {
+            override fun onButtonStateChanged(device: BluetoothDevice, state: String) {
                 _buttonState.tryEmit(state)
             }
         }
@@ -143,7 +143,7 @@ private class BlinkyManagerImpl(
 
         // Forward the button state to the buttonState flow.
         scope.launch {
-            flow.map { it.state }.collect { _buttonState.tryEmit(it) }
+            flow.map { it.state }.collect { _buttonState.tryEmit(it.toString()) }
         }
 
         enableNotifications(buttonCharacteristic)
