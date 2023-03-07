@@ -30,7 +30,7 @@ internal fun LedControlView(
     ) {
         Column(
             modifier = Modifier
-                .clickable { onStateChanged(!state) }
+                .clickable { onStateChanged(state) }
                 .padding(16.dp)
         ) {
             Row(
@@ -58,7 +58,7 @@ internal fun LedControlView(
                     text = stringResource(R.string.blinky_led_descr),
                     modifier = Modifier.weight(1f)
                 )
-                Switch(checked = state, onCheckedChange = onStateChanged)
+                Switch(checked = false, onCheckedChange = onStateChanged)
             }
         }
     }

@@ -38,7 +38,7 @@ class BlinkyRepository @Inject constructor(
             .also { sessionUri = it.session?.sessionUri }
     }
 
-    val loggedLedState: Flow<Boolean>
+    val loggedLedState: Flow<String>
         get() = blinky.ledState.onEach {
             // Although Timber log levels are the same as LogCat's, nRF Logger has its own.
             // All standard log levels are mapped to the corresponding nRF Logger's levels:
@@ -46,8 +46,8 @@ class BlinkyRepository @Inject constructor(
             // However, in order to log in nRF Logger on APPLICATION level, we need to use
             // that level explicitly.
             when(it) {
-                true -> Timber.log(LogContract.Log.Level.APPLICATION, "LED turned ON")
-                false -> Timber.log(LogContract.Log.Level.APPLICATION, "LED turned OFF")
+                "Ball" -> Timber.log(LogContract.Log.Level.APPLICATION, "LED turned ON")
+                "Kost" -> Timber.log(LogContract.Log.Level.APPLICATION, "LED turned OFF")
             }
         }
 

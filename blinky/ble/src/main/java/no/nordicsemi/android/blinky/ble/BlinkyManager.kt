@@ -35,7 +35,7 @@ private class BlinkyManagerImpl(
     private var ledCharacteristic: BluetoothGattCharacteristic? = null
     private var buttonCharacteristic: BluetoothGattCharacteristic? = null
 
-    private val _ledState = MutableStateFlow(false)
+    private val _ledState = MutableStateFlow("ball")
     override val ledState = _ledState.asStateFlow()
 
     private val _buttonState = MutableStateFlow(false)
@@ -74,7 +74,7 @@ private class BlinkyManagerImpl(
         }
     }
 
-    override suspend fun turnLed(state: Boolean) {
+    override suspend fun turnLed(state: String) {
         // Write the value to the characteristic.
         writeCharacteristic(
             ledCharacteristic,
@@ -106,7 +106,7 @@ private class BlinkyManagerImpl(
 
     private val ledCallback by lazy {
         object : LedCallback() {
-            override fun onLedStateChanged(device: BluetoothDevice, state: Boolean) {
+            override fun onLedStateChanged(device: BluetoothDevice, state: String) {
                 _ledState.tryEmit(state)
             }
         }
