@@ -57,6 +57,11 @@ class BlinkyRepository @Inject constructor(
             Timber.log(LogContract.Log.Level.APPLICATION, it)
         }
 
+    val loggedGameState: Flow<String>
+        get() = blinky.gameState.onEach {
+            Timber.log(LogContract.Log.Level.APPLICATION, it)
+        }
+
     override fun release() {
         Timber.uproot(tree)
         blinky.release()

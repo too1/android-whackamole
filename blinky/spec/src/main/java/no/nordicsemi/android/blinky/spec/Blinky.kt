@@ -35,6 +35,8 @@ interface Blinky {
      */
     val buttonState: StateFlow<String>
 
+    val gameState: StateFlow<String>
+
     /**
      * Controls the LED state.
      *

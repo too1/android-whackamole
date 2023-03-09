@@ -41,6 +41,9 @@ private class BlinkyManagerImpl(
     private val _buttonState = MutableStateFlow("null")
     override val buttonState = _buttonState.asStateFlow()
 
+    private val _gameState = MutableStateFlow("null2")
+    override val gameState = _gameState.asStateFlow()
+
     override val state = stateAsFlow()
         .map {
             when (it) {
@@ -101,6 +104,10 @@ private class BlinkyManagerImpl(
             override fun onButtonStateChanged(device: BluetoothDevice, state: String) {
                 _buttonState.tryEmit(state)
             }
+
+            override fun onGameStateChanged(device: BluetoothDevice, state: String) {
+                _gameState.tryEmit(state)
+            }
         }
     }
 
@@ -144,6 +151,7 @@ private class BlinkyManagerImpl(
         // Forward the button state to the buttonState flow.
         scope.launch {
             flow.map { it.state }.collect { _buttonState.tryEmit(it.toString()) }
+            flow.map { it.state }.collect { _gameState.tryEmit(it.toString()) }
         }
 
         enableNotifications(buttonCharacteristic)
