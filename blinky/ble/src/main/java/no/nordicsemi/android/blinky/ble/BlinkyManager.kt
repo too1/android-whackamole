@@ -151,6 +151,7 @@ private class BlinkyManagerImpl(
 
         // Forward the button state to the buttonState flow.
         scope.launch {
+            flow.map { it.buttonState }.collect { _buttonState.tryEmit(it) }
         }
 
         enableNotifications(buttonCharacteristic)
