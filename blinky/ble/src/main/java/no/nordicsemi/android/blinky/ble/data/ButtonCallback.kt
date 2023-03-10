@@ -8,9 +8,38 @@ import no.nordicsemi.android.blinky.spec.GameData
 abstract class ButtonCallback: ProfileReadResponse() {
 
     override fun onDataReceived(device: BluetoothDevice, data: Data) {
-        val btString = data.getStringValue(0).toString()
-        val gameDataState = GameData(btString, 123)
-        onButtonStateChanged(device, gameDataState)
+        var score: Int = 0
+        val gameData: GameData = GameData("", 0)
+        if(data.getByte(0)?.toInt()?.toChar() == 'A') {
+            // Challenge start
+            gameData.msg = "New challenge"
+            val targetTime = data.getByte(2)!!.toInt() * 256 + data.getByte(3)!!.toInt()
+            gameData.targetTime = targetTime
+        } else if(data.getByte(0)?.toInt()?.toChar() == 'B') {
+            // Challenge finish
+            val finalTime = data.getByte(2)!!.toInt() * 256 + data.getByte(3)!!.toInt()
+            val success = (data.getByte(6)!!.toInt() == 1)
+            val points = data.getByte(7)!!.toInt() * 256 + data.getByte(8)!!.toInt()
+            val fouls = data.getByte(9)!!.toInt() * 256 + data.getByte(10)!!.toInt()
+            gameData.msg = if(success) "Success!!" else "Failure!"
+            gameData.targetTime = finalTime
+            gameData.pointIncrement = points
+            gameData.totalScore++
+        } else if(data.getByte(0)?.toInt()?.toChar() == 'C') {
+            // Round start
+            gameData.msg = "Round start"
+            score = 3
+        } else if(data.getByte(0)?.toInt()?.toChar() == 'D') {
+            // Game start
+            gameData.msg = "Game start"
+            score = 4
+        } else if(data.getByte(0)?.toInt()?.toChar() == 'E') {
+            // Game finish
+            gameData.msg = "Game finish"
+        }
+
+        //val gameDataState = GameData(btString, score)
+        onButtonStateChanged(device, gameData)
     }
 
     abstract fun onButtonStateChanged(device: BluetoothDevice, state: GameData)

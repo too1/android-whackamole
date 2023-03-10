@@ -2,7 +2,11 @@ package no.nordicsemi.android.blinky.spec
 
 import kotlinx.coroutines.flow.StateFlow
 
-data class GameData (var msg: String, var score: Int)
+data class GameData (var msg: String, var score: Int) {
+    var targetTime: Int = 0
+    var pointIncrement: Int = 0
+    var totalScore: Int = 0
+}
 
 interface Blinky {
 

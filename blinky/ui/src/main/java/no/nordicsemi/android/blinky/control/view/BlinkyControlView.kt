@@ -22,17 +22,8 @@ internal fun BlinkyControlView(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        LedControlView(
-            state = true,
-            onStateChanged = onStateChanged,
-        )
-
-        ButtonControlView(
-            state = buttonState
-        )
-
         WAMGameControlView(
-            state = alternateState
+            state = buttonState
         )
     }
 }

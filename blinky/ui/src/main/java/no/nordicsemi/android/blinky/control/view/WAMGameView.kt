@@ -18,10 +18,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import no.nordicsemi.android.blinky.control.R
+import no.nordicsemi.android.blinky.spec.GameData
 import no.nordicsemi.android.common.theme.NordicTheme
 
 @Composable
-internal fun WAMGameControlView(state: String, modifier: Modifier = Modifier)
+internal fun WAMGameControlView(state: GameData, modifier: Modifier = Modifier)
 {
     OutlinedCard(
         modifier = modifier
@@ -42,7 +43,7 @@ internal fun WAMGameControlView(state: String, modifier: Modifier = Modifier)
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
                 )
                 Text(
-                    text = stringResource(R.string.blinky_button),
+                    text = "Running Game",
                     style = MaterialTheme.typography.headlineMedium,
                 )
             }
@@ -53,11 +54,39 @@ internal fun WAMGameControlView(state: String, modifier: Modifier = Modifier)
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = stringResource(R.string.blinky_button_descr),
+                    text = "Player score: ",
                     modifier = Modifier.weight(1f)
                 )
                 Text(
-                    text = state,
+                    text = state.totalScore.toString(),
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "Player name: ",
+                    modifier = Modifier.weight(1f)
+                )
+                Text(
+                    text = state.msg,
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "Target time: ",
+                    modifier = Modifier.weight(1f)
+                )
+                Text(
+                    text = state.targetTime.toString() + " ms",
                 )
             }
         }
@@ -69,7 +98,7 @@ internal fun WAMGameControlView(state: String, modifier: Modifier = Modifier)
 private fun WAMGameControlViewPreview() {
     NordicTheme {
         WAMGameControlView(
-            state = "NULL",
+            state = GameData("John Smit", 2),
             modifier = Modifier.padding(16.dp),
         )
     }
