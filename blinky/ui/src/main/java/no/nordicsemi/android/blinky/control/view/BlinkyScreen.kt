@@ -62,12 +62,13 @@ internal fun BlinkyScreen(
                 Blinky.State.READY -> {
                     val ledState by viewModel.ledState.collectAsStateWithLifecycle()
                     val buttonState by viewModel.buttonState.collectAsStateWithLifecycle()
-                    val altState by viewModel.gameState.collectAsStateWithLifecycle()
+                    val gameInstState by viewModel.gameInstState.collectAsStateWithLifecycle()
+                    //val gameStatus by viewModel.gameStatus
 
                     BlinkyControlView(
                         ledState = ledState,
                         buttonState = buttonState,
-                        alternateState = altState,
+                        alternateState = gameInstState.msg,
                         onStateChanged = { viewModel.turnLed("") },
                         modifier = Modifier
                             .widthIn(max = 460.dp)

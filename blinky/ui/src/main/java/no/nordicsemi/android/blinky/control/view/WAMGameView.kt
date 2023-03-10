@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.RadioButtonChecked
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,7 +23,7 @@ import no.nordicsemi.android.blinky.spec.GameData
 import no.nordicsemi.android.common.theme.NordicTheme
 
 @Composable
-internal fun WAMGameControlView(state: GameData, modifier: Modifier = Modifier)
+internal fun WAMGameControlView(state: GameData, altState: String, modifier: Modifier = Modifier)
 {
     OutlinedCard(
         modifier = modifier
@@ -58,7 +59,7 @@ internal fun WAMGameControlView(state: GameData, modifier: Modifier = Modifier)
                     modifier = Modifier.weight(1f)
                 )
                 Text(
-                    text = state.totalScore.toString(),
+                    text = state.totalScore.toString()
                 )
             }
             Row(
@@ -82,11 +83,71 @@ internal fun WAMGameControlView(state: GameData, modifier: Modifier = Modifier)
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
+                    text = "Round: " + state.roundNumber.toString() + "/6",
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Slider(
+                    value = state.roundNumber.toFloat(),
+                    onValueChange = {},
+                    valueRange = 0f..6f,
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "Challenge number: 1/6",
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Slider(
+                    value = 0.7f,
+                    onValueChange = {},
+                    valueRange = 0f..1f,
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
                     text = "Target time: ",
                     modifier = Modifier.weight(1f)
                 )
                 Text(
                     text = state.targetTime.toString() + " ms",
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "Debug shit: ",
+                    modifier = Modifier.weight(1f)
+                )
+                Text(
+                    text = altState,
                 )
             }
         }
@@ -99,6 +160,7 @@ private fun WAMGameControlViewPreview() {
     NordicTheme {
         WAMGameControlView(
             state = GameData("John Smit", 2),
+            altState = "Yoda",
             modifier = Modifier.padding(16.dp),
         )
     }

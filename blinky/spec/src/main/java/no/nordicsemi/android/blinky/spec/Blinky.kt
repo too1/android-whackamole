@@ -1,11 +1,24 @@
 package no.nordicsemi.android.blinky.spec
 
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 data class GameData (var msg: String, var score: Int) {
     var targetTime: Int = 0
     var pointIncrement: Int = 0
     var totalScore: Int = 0
+    var roundNumber: Int = 0
+}
+
+data class GameStatus (var totalScore: Int){
+    fun increment() {
+        totalScore++
+    }
+}
+
+data class GameInstData (var msg: String, var scoreInc: Int) {
+    var score: Int = 0
 }
 
 interface Blinky {
@@ -40,6 +53,10 @@ interface Blinky {
      * The current state of the button.
      */
     val buttonState: StateFlow<GameData>
+
+    val gameInstState: SharedFlow<GameInstData>
+
+    var gameStatus: GameStatus
 
     val gameState: StateFlow<String>
 

@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothGattCharacteristic
 import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
 import no.nordicsemi.android.ble.BleManager
 import no.nordicsemi.android.ble.ktx.asValidResponseFlow
@@ -17,9 +18,7 @@ import no.nordicsemi.android.blinky.ble.data.ButtonCallback
 import no.nordicsemi.android.blinky.ble.data.ButtonState
 import no.nordicsemi.android.blinky.ble.data.LedCallback
 import no.nordicsemi.android.blinky.ble.data.LedData
-import no.nordicsemi.android.blinky.spec.Blinky
-import no.nordicsemi.android.blinky.spec.BlinkySpec
-import no.nordicsemi.android.blinky.spec.GameData
+import no.nordicsemi.android.blinky.spec.*
 import timber.log.Timber
 
 class BlinkyManager(
@@ -41,6 +40,11 @@ private class BlinkyManagerImpl(
 
     private val _buttonState = MutableStateFlow(GameData("OnlyThisWillShow",-12))
     override val buttonState = _buttonState.asStateFlow()
+
+    override var gameStatus = GameStatus(0)
+
+    private val _gameInstState = MutableSharedFlow<GameInstData>(4, 4, BufferOverflow.DROP_OLDEST)
+    override val gameInstState = _gameInstState.asSharedFlow()
 
     private val _gameState = MutableStateFlow("null2")
     override val gameState = _gameState.asStateFlow()
@@ -103,11 +107,11 @@ private class BlinkyManagerImpl(
     private val buttonCallback by lazy {
         object : ButtonCallback() {
             override fun onButtonStateChanged(device: BluetoothDevice, iState: GameData) {
-                _buttonState.tryEmit(iState)
+                //_buttonState.tryEmit(iState)
             }
 
-            override fun onGameStateChanged(device: BluetoothDevice, state: String) {
-                _gameState.tryEmit(state)
+            override fun onGameInstChanged(device: BluetoothDevice, instState: GameInstData) {
+                _gameInstState.tryEmit(instState)
             }
         }
     }
@@ -152,6 +156,7 @@ private class BlinkyManagerImpl(
         // Forward the button state to the buttonState flow.
         scope.launch {
             flow.map { it.buttonState }.collect { _buttonState.tryEmit(it) }
+            flow.map { it.gameInstState }.collect { _gameInstState.tryEmit(it) }
         }
 
         enableNotifications(buttonCharacteristic)

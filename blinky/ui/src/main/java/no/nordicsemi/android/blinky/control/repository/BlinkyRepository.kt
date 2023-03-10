@@ -4,9 +4,11 @@ import android.content.Context
 import android.net.Uri
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.onEach
 import no.nordicsemi.android.blinky.spec.Blinky
 import no.nordicsemi.android.blinky.spec.GameData
+import no.nordicsemi.android.blinky.spec.GameInstData
 import no.nordicsemi.android.log.LogContract
 import no.nordicsemi.android.log.timber.nRFLoggerTree
 import timber.log.Timber
@@ -58,9 +60,9 @@ class BlinkyRepository @Inject constructor(
             Timber.log(LogContract.Log.Level.APPLICATION, it.msg)
         }
 
-    val loggedGameState: Flow<String>
-        get() = blinky.gameState.onEach {
-            Timber.log(LogContract.Log.Level.APPLICATION, it)
+    val loggedGameInstState: Flow<GameInstData>
+        get() = blinky.gameInstState.onEach {
+            Timber.log(LogContract.Log.Level.APPLICATION, it.msg)
         }
 
     override fun release() {

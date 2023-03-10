@@ -23,7 +23,8 @@ internal fun BlinkyControlView(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         WAMGameControlView(
-            state = buttonState
+            state = buttonState,
+            altState = alternateState
         )
     }
 }

@@ -4,11 +4,11 @@ import android.bluetooth.BluetoothDevice
 import no.nordicsemi.android.ble.callback.profile.ProfileReadResponse
 import no.nordicsemi.android.ble.data.Data
 import no.nordicsemi.android.blinky.spec.GameData
+import no.nordicsemi.android.blinky.spec.GameInstData
 
 abstract class ButtonCallback: ProfileReadResponse() {
 
     override fun onDataReceived(device: BluetoothDevice, data: Data) {
-        var score: Int = 0
         val gameData: GameData = GameData("", 0)
         if(data.getByte(0)?.toInt()?.toChar() == 'A') {
             // Challenge start
@@ -28,11 +28,10 @@ abstract class ButtonCallback: ProfileReadResponse() {
         } else if(data.getByte(0)?.toInt()?.toChar() == 'C') {
             // Round start
             gameData.msg = "Round start"
-            score = 3
+            gameData.roundNumber = data.getByte(1)!!.toInt() + 1
         } else if(data.getByte(0)?.toInt()?.toChar() == 'D') {
             // Game start
             gameData.msg = "Game start"
-            score = 4
         } else if(data.getByte(0)?.toInt()?.toChar() == 'E') {
             // Game finish
             gameData.msg = "Game finish"
@@ -43,5 +42,6 @@ abstract class ButtonCallback: ProfileReadResponse() {
     }
 
     abstract fun onButtonStateChanged(device: BluetoothDevice, state: GameData)
-    abstract fun onGameStateChanged(device: BluetoothDevice, state: String)
+
+    abstract fun onGameInstChanged(device: BluetoothDevice, state: GameInstData)
 }
