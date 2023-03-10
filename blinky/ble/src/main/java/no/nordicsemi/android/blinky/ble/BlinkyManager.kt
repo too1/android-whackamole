@@ -19,6 +19,7 @@ import no.nordicsemi.android.blinky.ble.data.LedCallback
 import no.nordicsemi.android.blinky.ble.data.LedData
 import no.nordicsemi.android.blinky.spec.Blinky
 import no.nordicsemi.android.blinky.spec.BlinkySpec
+import no.nordicsemi.android.blinky.spec.GameData
 import timber.log.Timber
 
 class BlinkyManager(
@@ -38,7 +39,7 @@ private class BlinkyManagerImpl(
     private val _ledState = MutableStateFlow("ball")
     override val ledState = _ledState.asStateFlow()
 
-    private val _buttonState = MutableStateFlow("null")
+    private val _buttonState = MutableStateFlow(GameData("OnlyThisWillShow",-12))
     override val buttonState = _buttonState.asStateFlow()
 
     private val _gameState = MutableStateFlow("null2")
@@ -101,8 +102,8 @@ private class BlinkyManagerImpl(
 
     private val buttonCallback by lazy {
         object : ButtonCallback() {
-            override fun onButtonStateChanged(device: BluetoothDevice, state: String) {
-                _buttonState.tryEmit(state)
+            override fun onButtonStateChanged(device: BluetoothDevice, iState: GameData) {
+                _buttonState.tryEmit(iState)
             }
 
             override fun onGameStateChanged(device: BluetoothDevice, state: String) {
@@ -150,8 +151,6 @@ private class BlinkyManagerImpl(
 
         // Forward the button state to the buttonState flow.
         scope.launch {
-            flow.map { it.state }.collect { _buttonState.tryEmit(it.toString()) }
-            flow.map { it.state }.collect { _gameState.tryEmit(it.toString()) }
         }
 
         enableNotifications(buttonCharacteristic)

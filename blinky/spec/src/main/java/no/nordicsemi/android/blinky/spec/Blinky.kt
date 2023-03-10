@@ -2,6 +2,8 @@ package no.nordicsemi.android.blinky.spec
 
 import kotlinx.coroutines.flow.StateFlow
 
+data class GameData (var msg: String, var score: Int)
+
 interface Blinky {
 
     enum class State {
@@ -33,7 +35,7 @@ interface Blinky {
     /**
      * The current state of the button.
      */
-    val buttonState: StateFlow<String>
+    val buttonState: StateFlow<GameData>
 
     val gameState: StateFlow<String>
 

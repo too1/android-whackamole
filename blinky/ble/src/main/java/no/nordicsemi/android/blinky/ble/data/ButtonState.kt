@@ -1,13 +1,14 @@
 package no.nordicsemi.android.blinky.ble.data
 
 import android.bluetooth.BluetoothDevice
+import no.nordicsemi.android.blinky.spec.GameData
 
 class ButtonState: ButtonCallback() {
-    var state: String = "none"
+    var buttonState: GameData = GameData("none", 0)
     var gameState: String = "gamestate"
 
-    override fun onButtonStateChanged(device: BluetoothDevice, state: String) {
-        this.state = state
+    override fun onButtonStateChanged(device: BluetoothDevice, state: GameData) {
+        this.buttonState = state
     }
 
     override fun onGameStateChanged(device: BluetoothDevice, state: String) {

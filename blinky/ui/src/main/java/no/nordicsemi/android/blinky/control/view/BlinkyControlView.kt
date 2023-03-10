@@ -7,12 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import no.nordicsemi.android.blinky.spec.GameData
 import no.nordicsemi.android.common.theme.NordicTheme
 
 @Composable
 internal fun BlinkyControlView(
     ledState: String,
-    buttonState: String,
+    buttonState: GameData,
     alternateState: String,
     onStateChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -42,7 +43,7 @@ private fun BlinkyControlViewPreview() {
     NordicTheme {
         BlinkyControlView(
             ledState = "Empty",
-            buttonState = "Empty",
+            buttonState = GameData("rall",1),
             alternateState = "Alt",
             onStateChanged = {},
             modifier = Modifier.padding(16.dp),

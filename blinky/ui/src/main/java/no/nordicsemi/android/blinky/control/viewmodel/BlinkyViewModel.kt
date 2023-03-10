@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import no.nordicsemi.android.blinky.control.repository.BlinkyRepository
+import no.nordicsemi.android.blinky.spec.GameData
 import no.nordicsemi.android.common.logger.NordicLogger
 import javax.inject.Inject
 import javax.inject.Named
@@ -36,7 +37,7 @@ class BlinkyViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.Lazily, "0-0-0")
     /** The button state. */
     val buttonState = repository.loggedButtonState
-        .stateIn(viewModelScope, SharingStarted.Lazily, "0-0-0")
+        .stateIn(viewModelScope, SharingStarted.Lazily, GameData("", 14))
 
     val gameState = repository.loggedGameState
         .stateIn(viewModelScope, SharingStarted.Lazily, "0-0-0")

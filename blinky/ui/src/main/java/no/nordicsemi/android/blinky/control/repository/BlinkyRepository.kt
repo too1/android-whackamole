@@ -6,6 +6,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
 import no.nordicsemi.android.blinky.spec.Blinky
+import no.nordicsemi.android.blinky.spec.GameData
 import no.nordicsemi.android.log.LogContract
 import no.nordicsemi.android.log.timber.nRFLoggerTree
 import timber.log.Timber
@@ -51,10 +52,10 @@ class BlinkyRepository @Inject constructor(
             }
         }
 
-    val loggedButtonState: Flow<String>
+    val loggedButtonState: Flow<GameData>
         get() = blinky.buttonState.onEach {
             // The same applies here.
-            Timber.log(LogContract.Log.Level.APPLICATION, it)
+            Timber.log(LogContract.Log.Level.APPLICATION, it.msg)
         }
 
     val loggedGameState: Flow<String>

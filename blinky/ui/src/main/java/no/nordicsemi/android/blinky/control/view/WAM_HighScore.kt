@@ -1,14 +1,14 @@
 package no.nordicsemi.android.blinky.control.view
 
+import android.widget.ListView
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.RadioButtonChecked
+import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,12 +18,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import no.nordicsemi.android.blinky.control.R
-import no.nordicsemi.android.blinky.spec.GameData
 import no.nordicsemi.android.common.theme.NordicTheme
 
 @Composable
-internal fun ButtonControlView(
-    state: GameData,
+internal fun WAM_HighScoreView(
+    state: Boolean,
+    onStateChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     OutlinedCard(
@@ -31,6 +31,7 @@ internal fun ButtonControlView(
     ) {
         Column(
             modifier = Modifier
+                .clickable { onStateChanged(state) }
                 .padding(16.dp)
         ) {
             Row(
@@ -39,43 +40,33 @@ internal fun ButtonControlView(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Image(
-                    imageVector = Icons.Default.RadioButtonChecked,
+                    imageVector = Icons.Default.Lightbulb,
                     contentDescription = null,
                     modifier = Modifier.padding(end = 16.dp),
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
                 )
                 Text(
-                    text = stringResource(R.string.blinky_button),
+                    text = "High Score",
                     style = MaterialTheme.typography.headlineMedium,
                 )
             }
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "Player name: ",
+                    text = stringResource(R.string.blinky_led_descr),
                     modifier = Modifier.weight(1f)
                 )
-                Text(
-                    text = state.msg,
-                )
+                Switch(checked = false, onCheckedChange = onStateChanged)
             }
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(
-                    text = "The score: ",
-                    modifier = Modifier.weight(1f)
-                )
-                Text(
-                    text = state.score.toString(),
-                )
+
             }
         }
     }
@@ -83,10 +74,11 @@ internal fun ButtonControlView(
 
 @Composable
 @Preview
-private fun ButtonControlViewPreview() {
+private fun WAM_HighScoreViewPreview() {
     NordicTheme {
-        ButtonControlView(
-            state = GameData("Bob",12),
+        WAM_HighScoreView(
+            state = true,
+            onStateChanged = {},
             modifier = Modifier.padding(16.dp),
         )
     }
