@@ -15,7 +15,8 @@ abstract class ButtonCallback: ProfileReadResponse() {
         if(data.getByte(0)?.toInt()?.toChar() == 'A') {
             // Challenge start
             gameData.msg = "New challenge"
-            val targetTime = data.getIntValue(Data.FORMAT_UINT16_BE, 2)!!
+            gameData.numControllers = data.getByte(2)!!.toInt()
+            val targetTime = data.getIntValue(Data.FORMAT_UINT16_BE, 3)!!
             gameData.targetTime = targetTime
         } else if(data.getByte(0)?.toInt()?.toChar() == 'B') {
             // Challenge finish
@@ -33,7 +34,8 @@ abstract class ButtonCallback: ProfileReadResponse() {
             // Round start
             gameData.msg = "Round start"
             gameData.roundNumber = data.getByte(1)!!.toInt() + 1
-            gameData.targetTime = data.getIntValue(Data.FORMAT_UINT16_BE, 3)!!
+            gameData.numControllers = data.getByte(3)!!.toInt()
+            gameData.targetTime = data.getIntValue(Data.FORMAT_UINT16_BE, 4)!!
         } else if(data.getByte(0)?.toInt()?.toChar() == 'D') {
             // Game start
             gameData.msg = "Game start"
@@ -42,6 +44,9 @@ abstract class ButtonCallback: ProfileReadResponse() {
             // Game finish
             gameData.msg = "Game finish"
             gameData.gameOver = true
+        } else if(data.getByte(0)?.toInt()?.toChar() == 'F') {
+            // Num controllers update
+            gameData.numControllers = data.getByte(1)!!.toInt()
         }
 
         //val gameDataState = GameData(btString, score)

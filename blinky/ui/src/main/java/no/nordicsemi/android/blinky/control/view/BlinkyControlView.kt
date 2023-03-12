@@ -2,6 +2,7 @@ package no.nordicsemi.android.blinky.control.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,18 +15,22 @@ import no.nordicsemi.android.common.theme.NordicTheme
 internal fun BlinkyControlView(
     ledState: String,
     buttonState: GameData,
-    alternateState: String,
-    onStateChanged: (Boolean) -> Unit,
+    onStateChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
+    Row(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        WAMGameControlView(
-            state = buttonState,
-            altState = alternateState
-        )
+
+            WAMGameControlView(
+                state = buttonState,
+                onStateChanged = onStateChanged,
+            )
+            WAM_HighScoreView(
+                state = buttonState,
+            )
+
     }
 }
 
@@ -36,7 +41,6 @@ private fun BlinkyControlViewPreview() {
         BlinkyControlView(
             ledState = "Empty",
             buttonState = GameData("rall",1),
-            alternateState = "Alt",
             onStateChanged = {},
             modifier = Modifier.padding(16.dp),
         )

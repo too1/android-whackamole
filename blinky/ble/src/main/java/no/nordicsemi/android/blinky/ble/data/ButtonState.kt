@@ -21,6 +21,7 @@ class ButtonState: ButtonCallback() {
         state.totalScore = actualGameState.totalScore
         state.totalPoints = actualGameState.totalPoints
         state.totalFouls = actualGameState.totalFouls
+        actualGameState.currentGameHighscore.score = actualGameState.totalScore
         // Update current round from persistent variables
         if (state.roundNumber > 0) {
             currentRound = state.roundNumber
@@ -32,23 +33,41 @@ class ButtonState: ButtonCallback() {
             // In case of a new game, re-initialize the gamestate
             actualGameState = GameData("", 0)
         }
+        if(state.gameOver) {
+            actualGameState.highscores.add(actualGameState.currentGameHighscore);
+        }
         // Update challenge list from persistent variables
-        while (state.challenges.isNotEmpty()) {
-            var newChallenge = state.challenges.removeFirst()
-            newChallenge.index = actualGameState.numChallenges
-            actualGameState.numChallenges++
-            actualGameState.challenges.add(newChallenge)
+        if (state.challenges.isNotEmpty()) {
+            while (state.challenges.isNotEmpty()) {
+                var newChallenge = state.challenges.removeFirst()
+                newChallenge.index = actualGameState.numChallenges
+                actualGameState.numChallenges++
+                actualGameState.challenges.add(newChallenge)
+            }
         }
         if(actualGameState.challenges.isNotEmpty()) {
-            state.challenges = actualGameState.challenges.takeLast(30) as MutableList<GameChallenge>
+            state.challenges = actualGameState.challenges.takeLast(200) as MutableList<GameChallenge>
             state.challenges.reverse()
             state.numChallenges = actualGameState.numChallenges
         }
+        // Update active list of highscores
+        if(state.currentGameHighscore.name != "") actualGameState.currentGameHighscore.name = state.currentGameHighscore.name
+        state.highscores.clear()
+        state.highscores.addAll(actualGameState.highscores)
+        state.highscores.add(actualGameState.currentGameHighscore)
+        state.highscores.sort()
+        state.highscores.reverse()
         // Update target time from persistent variable
         if(state.targetTime != 0) {
             actualGameState.targetTime = state.targetTime
         }
         state.targetTime = actualGameState.targetTime
+
+        // Update number of controllers
+        if(state.numControllers > 0) {
+            actualGameState.numControllers = state.numControllers
+        }
+        else state.numControllers = actualGameState.numControllers
 
         // Set the state
         this.buttonState = state

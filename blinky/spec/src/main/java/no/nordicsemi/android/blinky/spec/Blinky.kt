@@ -8,8 +8,19 @@ data class GameChallenge (var time: Int, var target: Int, var success: Boolean, 
     var index: Int = 0
 }
 
+data class GameHighscoreEntry (var score: Int, var name: String, var minTime: Int): Comparable<GameHighscoreEntry> {
+    var email: String = ""
+
+    override fun compareTo(other: GameHighscoreEntry): Int = when {
+        this.score != other.score -> this.score compareTo other.score
+        this.minTime != other.minTime -> other.minTime compareTo this.minTime
+        else -> 0
+    }
+}
+
 data class GameData (var msg: String, var score: Int) {
     var playerName: String = "John Smith"
+    var numControllers: Int = 0
     var targetTime: Int = 0
     var pointIncrement: Int = 0
     var foulIncrement: Int = 0
@@ -21,6 +32,8 @@ data class GameData (var msg: String, var score: Int) {
     var challenges: MutableList<GameChallenge> = mutableListOf()//GameChallenge(500, 1000, true, 0), GameChallenge(1200, 1000, false, 2))
     var startNewGame: Boolean = false
     var gameOver: Boolean = false
+    var highscores: MutableList<GameHighscoreEntry> = mutableListOf(GameHighscoreEntry(25, "Bob kåre", 254), GameHighscoreEntry(23, "Kakk barnes", 312), GameHighscoreEntry(30, "Olly bardun", 298), GameHighscoreEntry(30, "Pekk Perry", 123))
+    var currentGameHighscore: GameHighscoreEntry = GameHighscoreEntry(0, "", 0)
 }
 
 data class GameStatus (var totalScore: Int){

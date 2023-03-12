@@ -1,24 +1,22 @@
 package no.nordicsemi.android.blinky.control.view
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.RadioButtonChecked
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.Slider
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.SemanticsProperties.EditableText
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,6 +24,7 @@ import no.nordicsemi.android.blinky.control.R
 import no.nordicsemi.android.blinky.spec.GameChallenge
 import no.nordicsemi.android.blinky.spec.GameData
 import no.nordicsemi.android.common.theme.NordicTheme
+
 val colorGood = Color.hsl(90.0f, 0.8f, 0.8f)
 val colorBad = Color.hsl(0.0f, 0.8f, 0.8f)
 val colorGoodS = Color.hsl(90.0f, 0.8f, 0.3f)
@@ -86,7 +85,7 @@ internal fun createChallengeView(challenge: GameChallenge)
                     ) {
 
                         Text(
-                            text = challenge.index.toString() + "",
+                            text = (challenge.index + 1).toString() + "",
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(4.dp),
@@ -149,7 +148,7 @@ internal fun createChallengeView(challenge: GameChallenge)
                     ) {
 
                         Text(
-                            text = challenge.index.toString() + "",
+                            text = (challenge.index + 1).toString() + "",
                             modifier = Modifier
                                 .weight(4f)
                                 .padding(4.dp),
@@ -170,11 +169,16 @@ internal fun createChallengeView(challenge: GameChallenge)
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun WAMGameControlView(state: GameData, altState: String, modifier: Modifier = Modifier)
+internal fun WAMGameControlView(state: GameData,
+                                onStateChanged: (String) -> Unit,
+                                modifier: Modifier = Modifier)
 {
     OutlinedCard(
         modifier = modifier
+            .widthIn(max = 640.dp)
+            .fillMaxHeight()
     ) {
         Column(
             modifier = Modifier
@@ -187,22 +191,9 @@ internal fun WAMGameControlView(state: GameData, altState: String, modifier: Mod
             ) {
                 Text(
                     modifier = Modifier.weight(1f),
-                    text = "nRF Whack-A-Mole",
+                    text = "Current Game (" + state.numControllers.toString() + ")",
                     style = MaterialTheme.typography.headlineLarge,
                     textAlign = TextAlign.Center,
-                )
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = "Player - " + state.playerName,
-                    modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.headlineSmall,
                 )
             }
             Row(
@@ -261,6 +252,54 @@ internal fun WAMGameControlView(state: GameData, altState: String, modifier: Mod
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(vertical = 1.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "Name",
+                    modifier = Modifier.weight(1f),
+                    //textAlign = TextAlign.Center,
+                    //style = MaterialTheme.typography.headlineSmall,
+                )
+                Text(
+                    text = "Email",
+                    modifier = Modifier.weight(1.5f),
+                    //textAlign = TextAlign.Center,
+                    //style = MaterialTheme.typography.headlineSmall,
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 1.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                val textState = remember { mutableStateOf(TextFieldValue()) }
+                val textStateEmail = remember { mutableStateOf(TextFieldValue()) }
+                TextField(
+                    value = textState.value,
+                    onValueChange = {
+                        textState.value = it
+                        state.currentGameHighscore.name = it.toString()
+                        onStateChanged(it.toString())},
+                    modifier = Modifier
+                        .padding(2.dp)
+                        .weight(1f),
+                )
+                TextField(
+                    value = textStateEmail.value,
+                    onValueChange = {
+                        textStateEmail.value = it
+                        state.currentGameHighscore.email = it.toString()
+                                    },
+                    modifier = Modifier
+                        .padding(2.dp)
+                        .weight(1.5f),
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -296,10 +335,10 @@ internal fun WAMGameControlView(state: GameData, altState: String, modifier: Mod
                     text = state.numChallenges.toString() + "",
                 )
             }
-            state.challenges.forEach { challenge ->
+            /*state.challenges.forEach { challenge ->
                 createChallengeView(challenge)
-            }
-            /*
+            }*/
+
             if(state.challenges.isNotEmpty()) {
                 LazyColumn {
                     state.challenges.forEach { challenge ->
@@ -308,7 +347,7 @@ internal fun WAMGameControlView(state: GameData, altState: String, modifier: Mod
                         }
                     }
                 }
-            }*/
+            }
         }
 
     }
@@ -320,7 +359,7 @@ private fun WAMGameControlViewPreview() {
     NordicTheme {
         WAMGameControlView(
             state = GameData("", 2),
-            altState = "Yoda",
+            onStateChanged = {},
             modifier = Modifier.padding(16.dp),
         )
     }
