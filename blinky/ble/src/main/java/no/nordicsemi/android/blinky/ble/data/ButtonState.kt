@@ -28,14 +28,11 @@ class ButtonState: ButtonCallback() {
         else {
             state.roundNumber = currentRound
         }
-        // Update challenge list from persistent variables
         if(state.startNewGame) {
-            actualGameState.challenges.clear()
-            actualGameState.numChallenges = 0
-            actualGameState.totalPoints = 0
-            actualGameState.totalScore = 0
-            actualGameState.totalPoints = 0
+            // In case of a new game, re-initialize the gamestate
+            actualGameState = GameData("", 0)
         }
+        // Update challenge list from persistent variables
         while (state.challenges.isNotEmpty()) {
             var newChallenge = state.challenges.removeFirst()
             newChallenge.index = actualGameState.numChallenges
@@ -43,10 +40,15 @@ class ButtonState: ButtonCallback() {
             actualGameState.challenges.add(newChallenge)
         }
         if(actualGameState.challenges.isNotEmpty()) {
-            state.challenges = actualGameState.challenges.takeLast(6) as MutableList<GameChallenge>
+            state.challenges = actualGameState.challenges.takeLast(30) as MutableList<GameChallenge>
             state.challenges.reverse()
             state.numChallenges = actualGameState.numChallenges
         }
+        // Update target time from persistent variable
+        if(state.targetTime != 0) {
+            actualGameState.targetTime = state.targetTime
+        }
+        state.targetTime = actualGameState.targetTime
 
         // Set the state
         this.buttonState = state

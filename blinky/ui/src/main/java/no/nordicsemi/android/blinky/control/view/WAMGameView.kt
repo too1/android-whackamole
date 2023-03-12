@@ -264,7 +264,7 @@ internal fun WAMGameControlView(state: GameData, altState: String, modifier: Mod
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "Round: " + state.roundNumber.toString() + "/6",
+                    text = "Round " + state.roundNumber.toString() + " of 6 - Target time " + state.targetTime + " ms",
                     modifier = Modifier.weight(1f)
                 )
             }
