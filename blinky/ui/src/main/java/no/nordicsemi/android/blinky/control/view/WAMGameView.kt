@@ -128,7 +128,8 @@ internal fun createChallengeView(challenge: GameChallenge)
                         )
 
                         Text(
-                            text = challenge.time.toString() + " / " + challenge.target.toString() + " ms",
+                            text = if(challenge.time > 0) challenge.time.toString() + " / " + challenge.target.toString() + " ms"
+                                    else "Timeout! (" + challenge.target.toString() + " ms)",
                             modifier = Modifier
                                 .weight(3f)
                                 .padding(4.dp),
@@ -264,8 +265,9 @@ internal fun WAMGameControlView(state: GameData, altState: String, modifier: Mod
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "Round " + state.roundNumber.toString() + " of 6 - Target time " + state.targetTime + " ms",
-                    modifier = Modifier.weight(1f)
+                    text = if (state.gameOver) "Game Over!" else "Round " + state.roundNumber.toString() + " of 6 - Target time " + state.targetTime + " ms",
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.headlineSmall,
                 )
             }
             Row(

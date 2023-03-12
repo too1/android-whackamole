@@ -20,6 +20,7 @@ data class GameData (var msg: String, var score: Int) {
     var numChallenges: Int = 0
     var challenges: MutableList<GameChallenge> = mutableListOf()//GameChallenge(500, 1000, true, 0), GameChallenge(1200, 1000, false, 2))
     var startNewGame: Boolean = false
+    var gameOver: Boolean = false
 }
 
 data class GameStatus (var totalScore: Int){

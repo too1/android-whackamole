@@ -41,6 +41,7 @@ abstract class ButtonCallback: ProfileReadResponse() {
         } else if(data.getByte(0)?.toInt()?.toChar() == 'E') {
             // Game finish
             gameData.msg = "Game finish"
+            gameData.gameOver = true
         }
 
         //val gameDataState = GameData(btString, score)
