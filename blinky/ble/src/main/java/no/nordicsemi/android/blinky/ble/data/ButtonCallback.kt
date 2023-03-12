@@ -3,6 +3,7 @@ package no.nordicsemi.android.blinky.ble.data
 import android.bluetooth.BluetoothDevice
 import no.nordicsemi.android.ble.callback.profile.ProfileReadResponse
 import no.nordicsemi.android.ble.data.Data
+import no.nordicsemi.android.blinky.spec.GameChallenge
 import no.nordicsemi.android.blinky.spec.GameData
 import no.nordicsemi.android.blinky.spec.GameInstData
 
@@ -13,18 +14,21 @@ abstract class ButtonCallback: ProfileReadResponse() {
         if(data.getByte(0)?.toInt()?.toChar() == 'A') {
             // Challenge start
             gameData.msg = "New challenge"
-            val targetTime = data.getByte(2)!!.toInt() * 256 + data.getByte(3)!!.toInt()
+            val targetTime = (data.getByte(2)!!.toInt() * 256) + data.getByte(3)!!.toInt()
             gameData.targetTime = targetTime
         } else if(data.getByte(0)?.toInt()?.toChar() == 'B') {
             // Challenge finish
-            val finalTime = data.getByte(2)!!.toInt() * 256 + data.getByte(3)!!.toInt()
+            val finalTime = (data.getByte(2)?.toInt()!! * 256) + data.getByte(3)?.toInt()!!
+            val time = (data.getByte(4)?.toInt()!! * 256) + data.getByte(5)?.toInt()!!
             val success = (data.getByte(6)!!.toInt() == 1)
-            val points = data.getByte(7)!!.toInt() * 256 + data.getByte(8)!!.toInt()
-            val fouls = data.getByte(9)!!.toInt() * 256 + data.getByte(10)!!.toInt()
+            val points = (data.getByte(7)!!.toInt() * 256) + data.getByte(8)!!.toInt()
+            val fouls = (data.getByte(9)!!.toInt() * 256) + data.getByte(10)!!.toInt()
             gameData.msg = if(success) "Success!!" else "Failure!"
             gameData.targetTime = finalTime
             gameData.pointIncrement = points
+            gameData.foulIncrement = fouls
             gameData.totalScore++
+            gameData.challenges.add(GameChallenge(finalTime,  time, success, fouls))
         } else if(data.getByte(0)?.toInt()?.toChar() == 'C') {
             // Round start
             gameData.msg = "Round start"
@@ -32,6 +36,7 @@ abstract class ButtonCallback: ProfileReadResponse() {
         } else if(data.getByte(0)?.toInt()?.toChar() == 'D') {
             // Game start
             gameData.msg = "Game start"
+            gameData.startNewGame = true
         } else if(data.getByte(0)?.toInt()?.toChar() == 'E') {
             // Game finish
             gameData.msg = "Game finish"
