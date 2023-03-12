@@ -3,7 +3,9 @@ package no.nordicsemi.android.blinky.control.view
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.RadioButtonChecked
@@ -32,35 +34,137 @@ val colorBadS = Color.hsl(0.0f, 0.8f, 0.3f)
 @Composable
 internal fun createChallengeView(challenge: GameChallenge)
 {
-    Box(modifier = Modifier
-        .border(width = 2.dp, color = Color.Gray, shape = RoundedCornerShape(8.dp))
-        .background(if (challenge.success) colorGood else colorBad)
-        .padding(4.dp),
-
-    ) {
-        Row(
+    Box(modifier = Modifier.padding(2.dp)) {
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 0.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = challenge.time.toString() + " ms",
-                modifier = Modifier.weight(if (challenge.success) 1f else 4f)
-                    .padding(4.dp)
-            )
-            if (challenge.success) {
-                Slider(
-                    value = challenge.time.toFloat() / challenge.target.toFloat(),
-                    onValueChange = {},
-                    valueRange = 0f..1f,
-                    modifier = Modifier.weight(3f),
+                .border(width = 2.dp, color = Color.Gray, shape = RoundedCornerShape(8.dp))
+                .background(
+                    color = if (challenge.success) colorGood else colorBad,
+                    shape = RoundedCornerShape(8.dp)
                 )
+                .padding(4.dp),
+
+            ) {
+            if (challenge.success) {
+                Column(
+                    modifier = Modifier
+                        .padding(0.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 0.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+
+                        Text(
+                            text = "ChgNo",
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(4.dp),
+                            style = MaterialTheme.typography.labelMedium,
+                        )
+
+                        Text(
+                            text = challenge.time.toString() + " / " + challenge.target.toString() + " ms",
+                            modifier = Modifier
+                                .weight(3f)
+                                .padding(4.dp),
+                        )
+
+                        Text(
+                            text = "Fouls",
+                            modifier = Modifier
+                                .weight(1.4f)
+                                .padding(4.dp),
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 0.dp),
+                    ) {
+
+                        Text(
+                            text = challenge.index.toString() + "",
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(4.dp),
+                            style = MaterialTheme.typography.headlineMedium,
+                        )
+                        Slider(
+                            value = challenge.time.toFloat() / challenge.target.toFloat(),
+                            onValueChange = {},
+                            valueRange = 0f..1f,
+                            modifier = Modifier.weight(3f),
+                        )
+                        Text(
+                            text = challenge.fouls.toString(),
+                            modifier = Modifier
+                                .weight(1.4f)
+                                .padding(4.dp),
+                            style = MaterialTheme.typography.headlineMedium,
+                        )
+                    }
+                }
+            } else {
+                Column(
+                    modifier = Modifier
+                        .padding(0.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 0.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+
+                        Text(
+                            text = "ChgNo",
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(4.dp),
+                            style = MaterialTheme.typography.labelMedium,
+                        )
+
+                        Text(
+                            text = challenge.time.toString() + " / " + challenge.target.toString() + " ms",
+                            modifier = Modifier
+                                .weight(3f)
+                                .padding(4.dp),
+                        )
+
+                        Text(
+                            text = "Fouls",
+                            modifier = Modifier
+                                .weight(1.4f)
+                                .padding(4.dp),
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 0.dp),
+                    ) {
+
+                        Text(
+                            text = challenge.index.toString() + "",
+                            modifier = Modifier
+                                .weight(4f)
+                                .padding(4.dp),
+                            style = MaterialTheme.typography.headlineMedium,
+                        )
+
+                        Text(
+                            text = challenge.fouls.toString(),
+                            modifier = Modifier
+                                .weight(1.4f)
+                                .padding(4.dp),
+                            style = MaterialTheme.typography.headlineMedium,
+                        )
+                    }
+                }
             }
-            Text(
-                text = challenge.target.toString() + " ms",
-                modifier = Modifier.weight(1f).padding(4.dp),
-            )
         }
     }
 }
@@ -73,22 +177,18 @@ internal fun WAMGameControlView(state: GameData, altState: String, modifier: Mod
     ) {
         Column(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(12.dp)
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Image(
-                    imageVector = Icons.Default.RadioButtonChecked,
-                    contentDescription = null,
-                    modifier = Modifier.padding(end = 16.dp),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
-                )
                 Text(
-                    text = "Running Game",
-                    style = MaterialTheme.typography.headlineMedium,
+                    modifier = Modifier.weight(1f),
+                    text = "nRF Whack-A-Mole",
+                    style = MaterialTheme.typography.headlineLarge,
+                    textAlign = TextAlign.Center,
                 )
             }
             Row(
@@ -117,10 +217,10 @@ internal fun WAMGameControlView(state: GameData, altState: String, modifier: Mod
                     style = MaterialTheme.typography.headlineSmall,
                 )
                 Text(
-                    text = "TOTAL",
+                    text = "Total",
                     modifier = Modifier.weight(2f),
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.headlineSmall,
+                    style = MaterialTheme.typography.headlineMedium,
                 )
                 Text(
                     text = "Fouls",
@@ -146,7 +246,7 @@ internal fun WAMGameControlView(state: GameData, altState: String, modifier: Mod
                     text = state.totalScore.toString(),
                     modifier = Modifier.weight(2f),
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.headlineLarge,
                     color = if (state.totalScore >= 0) colorGoodS else colorBadS,
                 )
                 Text(
@@ -180,31 +280,6 @@ internal fun WAMGameControlView(state: GameData, altState: String, modifier: Mod
                     valueRange = 0f..6f,
                 )
             }
-            /*
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = "Challenge number: 1/6",
-                    modifier = Modifier.weight(1f)
-                )
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Slider(
-                    value = 0.7f,
-                    onValueChange = {},
-                    valueRange = 0f..1f,
-                )
-            }
-            */
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -222,7 +297,18 @@ internal fun WAMGameControlView(state: GameData, altState: String, modifier: Mod
             state.challenges.forEach { challenge ->
                 createChallengeView(challenge)
             }
+            /*
+            if(state.challenges.isNotEmpty()) {
+                LazyColumn {
+                    state.challenges.forEach { challenge ->
+                        item {
+                            createChallengeView(challenge)
+                        }
+                    }
+                }
+            }*/
         }
+
     }
 }
 

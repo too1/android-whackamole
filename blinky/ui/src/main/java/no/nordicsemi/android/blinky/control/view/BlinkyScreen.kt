@@ -71,7 +71,7 @@ internal fun BlinkyScreen(
                         alternateState = gameInstState.msg,
                         onStateChanged = { viewModel.turnLed("") },
                         modifier = Modifier
-                            .widthIn(max = 460.dp)
+                            .widthIn(max = 640.dp)
                             .verticalScroll(rememberScrollState())
                             .padding(16.dp)
                     )

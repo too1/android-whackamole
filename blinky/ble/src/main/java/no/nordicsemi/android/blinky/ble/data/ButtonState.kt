@@ -32,6 +32,9 @@ class ButtonState: ButtonCallback() {
         if(state.startNewGame) {
             actualGameState.challenges.clear()
             actualGameState.numChallenges = 0
+            actualGameState.totalPoints = 0
+            actualGameState.totalScore = 0
+            actualGameState.totalPoints = 0
         }
         while (state.challenges.isNotEmpty()) {
             var newChallenge = state.challenges.removeFirst()

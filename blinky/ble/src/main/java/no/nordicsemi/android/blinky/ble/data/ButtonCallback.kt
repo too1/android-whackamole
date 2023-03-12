@@ -1,6 +1,7 @@
 package no.nordicsemi.android.blinky.ble.data
 
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothGattCharacteristic.FORMAT_UINT16
 import no.nordicsemi.android.ble.callback.profile.ProfileReadResponse
 import no.nordicsemi.android.ble.data.Data
 import no.nordicsemi.android.blinky.spec.GameChallenge
@@ -18,11 +19,11 @@ abstract class ButtonCallback: ProfileReadResponse() {
             gameData.targetTime = targetTime
         } else if(data.getByte(0)?.toInt()?.toChar() == 'B') {
             // Challenge finish
-            val finalTime = (data.getByte(2)?.toInt()!! * 256) + data.getByte(3)?.toInt()!!
-            val time = (data.getByte(4)?.toInt()!! * 256) + data.getByte(5)?.toInt()!!
+            val finalTime = data.getIntValue(Data.FORMAT_UINT16_BE, 2)!!
+            val time = data.getIntValue(Data.FORMAT_UINT16_BE, 4)!!
             val success = (data.getByte(6)!!.toInt() == 1)
-            val points = (data.getByte(7)!!.toInt() * 256) + data.getByte(8)!!.toInt()
-            val fouls = (data.getByte(9)!!.toInt() * 256) + data.getByte(10)!!.toInt()
+            val points = data.getIntValue(Data.FORMAT_UINT16_BE, 7)!!
+            val fouls = data.getIntValue(Data.FORMAT_UINT16_BE, 9)!!
             gameData.msg = if(success) "Success!!" else "Failure!"
             gameData.targetTime = finalTime
             gameData.pointIncrement = points
